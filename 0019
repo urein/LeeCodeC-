@@ -1,5 +1,3 @@
-CODES:
-
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -50,7 +48,6 @@ void travelList(ListNode* pHead)
 }
 
 
-
 int main()
 {
     ListNode nd1(1);
@@ -76,11 +73,7 @@ int main()
 	
     Solution solve;
     ListNode* newHead = solve.removeNthFromTail(&nd1, 4);
-
     travelList(newHead);
-
-    
+  
     return 0;
 }
-
-
