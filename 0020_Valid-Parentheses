@@ -1,0 +1,61 @@
+#include<iostream>
+#include<stack>
+using namespace std;
+
+
+class Solution {
+public:
+    bool isValid(string s) 
+    {
+        stack<char> stk;
+        for (auto ch : s)
+        {
+            if (ch == '(' || ch == '[' || ch == '{')
+                stk.push(ch);
+            else
+            {
+                if (stk.empty())
+                    return false;
+
+                    if (ch == ')')
+                        if (stk.top() == '(') {
+                            stk.pop();
+                            continue;
+                        }
+
+                        else
+                            return false;
+                    else if (ch == ']')
+                        if (stk.top() == '[') {
+                            stk.pop();
+                            continue;
+                        }
+                        else
+                            return false;
+                    else if (ch == '}')
+                        if (stk.top() == '{') {
+                            stk.pop();
+                            continue;
+                        }
+                        else
+                            return false;
+
+            }
+        }
+        return true;
+    }
+};
+
+
+int main()
+{
+    Solution solve;
+    cout << solve.isValid("([{}])[]") << endl;
+
+    return 0;
+}
+
+
+
+NOTEs:
+使用stack
