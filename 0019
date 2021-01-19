@@ -4,8 +4,8 @@ using namespace std;
 
 struct ListNode
 {
-	int m_Value;
-	ListNode* m_pNext;
+    int m_Value;
+    ListNode* m_pNext;
     
     ListNode() :m_Value(0), m_pNext(nullptr) {}
     ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
