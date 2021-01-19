@@ -1,0 +1,45 @@
+#include<iostream>
+using namespace std;
+
+
+class Solution 
+{
+public:
+    bool isPalindrome(int x) 
+    {
+        if (x < 0)
+            return false;
+        unsigned div = 1;
+        while (x / div >= 10)
+            div *= 10;
+
+        while (div)
+        {
+            if (x / div == x % 10)
+            {
+                x -= (x / div) * div;
+                x /= 10;
+                div /= 100;
+            }
+            else
+                return false;
+        }
+        return true;
+    }
+};
+
+
+int main()
+{
+    Solution solve;
+    cout << solve.isPalindrome(123454321) << endl;
+    
+    return 0;
+}
+
+
+NOTES:
+
+比如12321，先判断最低位和最高位。如果相同，则去除最低位和最高位。
+继续判断剩下的232。以此类推。
+需要分别考虑位数为奇数和偶数的情况
