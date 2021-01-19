@@ -1,0 +1,49 @@
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+using namespace std;
+
+class Solution 
+{
+public:
+    vector<int> twoSum(vector<int>& nums, int target) 
+    {
+        unordered_map<int, int> record;  // based on hash
+        for (int idx = 0; idx != nums.size(); ++idx)
+        {
+            auto diff = target - nums[idx];
+            if (record.find(diff) != record.end())
+                return vector<int>({ record[diff], idx });
+            record[nums[idx]] = idx;
+        }
+        return {};
+    }
+};
+
+
+
+int main()
+{
+    Solution solve;
+    vector<int> data = { 2, 7, 11, 15 };
+    int target = 6;
+    auto ret = solve.twoSum(data, target);
+    for (auto i : ret)
+        cout << i << " ";
+    cout << endl;
+    
+    return 0;
+}
+
+
+
+NOTES:
+
+records是一个unordered_map，key表示已遍历过的元素，value表示该元素的索引。
+
+代码效率：
+时间复杂度：O(n)
+空间复杂度：O(n)
+
+unordered_map基于哈希，查找的时间复杂度是O(1)。如果用普通的map会增加查找的时间复杂度。
+
