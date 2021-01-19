@@ -1,0 +1,80 @@
+#include<iostream>
+using namespace std;
+
+struct ListNode
+{
+    int m_Value;
+    ListNode* m_pNext;
+
+    ListNode() :m_Value(0), m_pNext(nullptr) {}
+    ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
+    ListNode(int val, ListNode* next) :m_Value(val), m_pNext(next) {}
+};
+
+
+class Solution 
+{
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) 
+    {
+        ListNode* pMergedHead = nullptr;
+        if (!l1)
+            return l2;
+        if (!l2)
+            return l1;
+        
+        if (l1->m_Value <= l2->m_Value)
+        {
+            pMergedHead = l1;
+            pMergedHead->m_pNext = mergeTwoLists(l1->m_pNext, l2);
+        }
+        else
+        {
+            pMergedHead = l2;
+            l2->m_pNext = mergeTwoLists(l1, l2->m_pNext);
+        }
+
+        return pMergedHead;
+    }
+};
+
+
+void travelList(ListNode* pHead)
+{
+    ListNode* p = pHead;
+    while (p)
+    {
+        cout << p->m_Value << " ";
+        p = p->m_pNext;
+    }
+}
+
+int main()
+{
+    Solution solve;
+    
+    ListNode nd1(1);
+    ListNode nd2(2);
+    ListNode nd3(4);
+    ListNode nd4(5);
+    nd1.m_pNext = &nd2;
+    nd2.m_pNext = &nd3;
+    nd3.m_pNext = &nd4;
+
+    ListNode nd5(1);
+    ListNode nd6(3);
+    ListNode nd7(4);
+    nd5.m_pNext = &nd6;
+    nd6.m_pNext = &nd7;
+
+    auto pr = solve.mergeTwoLists(&nd1, &nd5);
+    travelList(pr);
+
+    return 0;
+}
+
+
+
+NOTES:
+
+使用递归让代码更简洁。不要忘记递归出口。
