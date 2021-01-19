@@ -1,0 +1,89 @@
+#include<iostream>
+using namespace std;
+
+
+struct ListNode
+{
+    int m_Value;
+    ListNode* m_pNext;
+
+    ListNode() :m_Value(0), m_pNext(nullptr) {}
+    ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
+    ListNode(int val, ListNode* next) :m_Value(val), m_pNext(next) {}
+};
+
+
+class Solution 
+{
+public:
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) 
+    {
+        ListNode* p1 = l1, * p2 = l2;
+        ListNode* cur = new ListNode(-1);
+        int carry = 0;
+        while (p1 || p2)
+        {
+            int n1 = p1 ? p1->m_Value : 0;
+            int n2 = p2 ? p2->m_Value : 0;
+            ListNode* newHead = new ListNode((n1 + n2 + carry) % 10);
+            carry = (n1 + n2 + carry >= 10) ? 1 : 0;
+
+            newHead->m_pNext = cur;
+            cur = newHead;
+
+            p1 = p1 ? p1->m_pNext : nullptr;
+            p2 = p2 ? p2->m_pNext : nullptr;
+        }
+        if (carry)
+        {
+            ListNode* lastNd = new ListNode(carry);
+            lastNd->m_pNext = cur;
+            cur = lastNd;
+        }
+
+        return cur;
+    }
+};
+
+
+void travelList(ListNode* pHead)
+{
+    ListNode* p = pHead;
+    while (p->m_Value != -1)
+    {
+        cout << p->m_Value << " ";
+        p = p->m_pNext;
+    }
+}
+
+int main()
+{
+    Solution solve;
+    ListNode nd1(9);
+    ListNode nd2(9);
+    ListNode nd3(9);
+    ListNode nd4(9);
+    ListNode nd5(9);
+    ListNode nd6(9);
+    ListNode nd7(9);
+    nd1.m_pNext = &nd2;
+    nd2.m_pNext = &nd3;
+    nd3.m_pNext = &nd4;
+    nd4.m_pNext = &nd5;
+    nd5.m_pNext = &nd6;
+    nd6.m_pNext = &nd7;
+
+    ListNode nd8(9);
+    ListNode nd9(9);
+    ListNode nd10(9);
+    ListNode nd11(9);
+    nd8.m_pNext = &nd9;
+    nd9.m_pNext = &nd10;
+    nd10.m_pNext = &nd11;
+
+
+    auto pr = solve.addTwoNumbers(&nd1, &nd8);
+    travelList(pr);
+
+    return 0;
+}
