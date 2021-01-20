@@ -1,0 +1,102 @@
+#include<iostream>
+using namespace std;
+
+
+struct ListNode
+{
+    int m_Value;
+    ListNode* m_pNext;
+
+    ListNode() :m_Value(0), m_pNext(nullptr) {}
+    ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
+    ListNode(int val, ListNode* next) :m_Value(val), m_pNext(next) {}
+};
+
+
+class Solution 
+{
+public:
+    ListNode* reverseBetween(ListNode* pHead, int m, int n) 
+    {
+        ListNode* pre = pHead;
+        for (int i = 0; i != m - 2; ++i)
+            pre = pre->m_pNext;
+        
+        ListNode* pMovedLast = pre->m_pNext;
+
+        ListNode* pInsertFront = pre->m_pNext;
+        ListNode* pNextMove = pInsertFront->m_pNext;
+        
+        ListNode* pTmp;
+
+        for (int i = 0; i != n - m; ++i)
+        {
+            pre->m_pNext = pNextMove;
+            pTmp = pNextMove->m_pNext;
+            pMovedLast->m_pNext = pTmp;
+            pNextMove->m_pNext = pInsertFront;
+            
+            pNextMove = pTmp;
+            pInsertFront = pre->m_pNext;
+        }
+        
+        return pHead;
+    }
+};
+
+
+void travelList(ListNode* pHead)
+{
+    ListNode* p = pHead;
+    while (p)
+    {
+        cout << p->m_Value << " ";
+        p = p->m_pNext;
+    }
+}
+
+int main()
+{
+    ListNode nd1(1);
+    ListNode nd2(2);
+    ListNode nd3(3);
+    ListNode nd4(4);
+    ListNode nd5(5);
+    ListNode nd6(6);
+    ListNode nd7(7);
+    ListNode nd8(8);
+    ListNode nd9(9);
+    ListNode nd10(10);
+
+    nd1.m_pNext = &nd2;
+    nd2.m_pNext = &nd3;
+    nd3.m_pNext = &nd4;
+    nd4.m_pNext = &nd5;
+    nd5.m_pNext = &nd6;
+    nd6.m_pNext = &nd7;
+    nd7.m_pNext = &nd8;
+    nd8.m_pNext = &nd9;
+    nd9.m_pNext = &nd10;
+
+
+    Solution solve;
+    auto pr = solve.reverseBetween(&nd1, 3, 8);
+    travelList(pr);
+    
+    return 0;
+}
+
+
+NOTES:
+
+1->2->3->4->5->6
+假如反序第3到第6个元素
+
+思路：pre找到2，将第一个需要移动的节点4放到3前，然后将下一个需要移动的节点5放到4前，以此类推。
+
+变量含义：
+pre：待处理序列前的一个元素，即2
+pMovedLast：指向反序后的最后一个元素，始终不变，即3
+pInsertFront：当前迭代新元素插在pInsertFront前面，比如首次迭代需要把4插到3前面，pInsertFront就是3
+pNextMove：下次迭代需要移动的元素，对于首次迭代来讲，下次迭代需要移动的元素就是4
+pTmp：pNextMove的下一个元素。因为在修改pNextMove的m_pNext之前，需要一个临时变量保存它
