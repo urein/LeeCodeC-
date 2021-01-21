@@ -1,0 +1,103 @@
+#include<iostream>
+using namespace std;
+
+struct ListNode
+{
+    int m_Value;
+    ListNode* m_pNext;
+
+    ListNode() :m_Value(0), m_pNext(nullptr) {}
+    ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
+    ListNode(int val, ListNode* next) :m_Value(val), m_pNext(next) {}
+};
+
+
+class Solution 
+{
+public:
+    ListNode* detectCycle(ListNode* pHead) 
+    {
+        if (!pHead || !pHead->m_pNext)
+            return nullptr;
+        
+        ListNode* pFast = pHead;
+        ListNode* pSlow = pHead;
+        ListNode* pMeet = nullptr;
+
+        while (pFast)
+        {
+            pSlow = pSlow->m_pNext;
+            pFast = pFast->m_pNext->m_pNext;
+            if (pSlow == pFast)
+            {
+                pMeet = pSlow;
+                break;
+            }
+        }
+        if (!pFast)
+            return nullptr;
+        
+        pSlow = pSlow->m_pNext;
+        int nCircle = 1;
+        while (pSlow != pMeet)
+        {
+            pSlow = pSlow->m_pNext;
+            ++nCircle;
+        }
+
+        ListNode* pAhead = pHead;
+        ListNode* pBehind = pHead;
+        for (int i = 0;i != nCircle; ++i)
+            pAhead = pAhead->m_pNext;
+        while (pAhead != pBehind)
+        {
+            pAhead = pAhead->m_pNext;
+            pBehind = pBehind->m_pNext;
+        }
+        
+        return pBehind;
+
+    }
+};
+
+
+int main()
+{
+    ListNode nd1(1);
+    ListNode nd2(2);
+    ListNode nd3(3);
+    ListNode nd4(4);
+    ListNode nd5(5);
+    ListNode nd6(6);
+    ListNode nd7(7);
+    ListNode nd8(8);
+    ListNode nd9(9);
+    ListNode nd10(10);
+
+    nd1.m_pNext = &nd2;
+    nd2.m_pNext = &nd3;
+    nd3.m_pNext = &nd4;
+    nd4.m_pNext = &nd5;
+    nd5.m_pNext = &nd6;
+    nd6.m_pNext = &nd7;
+    nd7.m_pNext = &nd8;
+    nd8.m_pNext = &nd9;
+    nd9.m_pNext = &nd10;
+    nd10.m_pNext = &nd6;
+
+    Solution solve;
+    auto pRet = solve.detectCycle(&nd1);
+    if (pRet)
+        cout << pRet->m_Value << endl;
+    else
+        cout << "no Circle" << endl;
+    
+    return 0;
+}
+
+
+NOTES:
+
+按照141题的思路，利用快慢指针确定链表是否有环，如果有环则继续确定环的节点数n，方法是让慢指针一直走，直到再次遇到当前的位置。
+找到了环中的节点数后定义两个指针，初始位置均指向pHead。让其中一个指针向前走n步，然后两个指针一起走，相遇的点就是环的入口节点。
+因为先走的指针比后走的指针多走一个环的步数，下次相遇必定在环的起点。
