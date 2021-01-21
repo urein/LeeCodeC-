@@ -1,0 +1,72 @@
+#include<iostream>
+#include<unordered_set>
+using namespace std;
+
+
+struct ListNode
+{
+    int m_Value;
+    ListNode* m_pNext;
+
+    ListNode() :m_Value(0), m_pNext(nullptr) {}
+    ListNode(int val) :m_Value(val), m_pNext(nullptr) {}
+    ListNode(int val, ListNode* next) :m_Value(val), m_pNext(next) {}
+};
+
+
+class Solution 
+{
+public:
+    ListNode* middleNode(ListNode* pHead) 
+    {
+        if (!pHead)
+            return nullptr;
+        if (!pHead->m_pNext)
+            return pHead;
+
+        ListNode* pSlow = pHead;
+        ListNode* pFast = pHead;
+
+        while (pFast && pFast->m_pNext)
+        {
+            pSlow = pSlow->m_pNext;
+            pFast = pFast->m_pNext->m_pNext;
+        }
+        return pSlow;
+    }
+};
+
+
+
+int main()
+{
+    Solution solve;
+
+    ListNode nd1(1);
+    ListNode nd2(2);
+    ListNode nd3(3);
+    ListNode nd4(4);
+    ListNode nd5(5);
+    ListNode nd6(6);
+    ListNode nd7(7);
+    ListNode nd8(8);
+
+    nd1.m_pNext = &nd2;
+    nd2.m_pNext = &nd3;
+    nd3.m_pNext = &nd4;
+    nd4.m_pNext = &nd5;
+    nd5.m_pNext = &nd6;
+    nd6.m_pNext = &nd7;
+    nd7.m_pNext = &nd8;
+
+    auto pMidNode = solve.middleNode(&nd1);
+    cout << pMidNode->m_Value << endl;
+
+	return 0;
+}
+
+
+NOTES:
+
+使用快慢指针，快指针一次走两步，慢指针一次走一步。当快指针走到末尾，满指针刚好指向中间位置。
+考虑链表中的节点数分别是奇数和偶数两种情况。
