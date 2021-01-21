@@ -1,0 +1,57 @@
+#include<iostream>
+#include<unordered_set>
+using namespace std;
+
+class Solution 
+{
+public:
+    bool isHappy(int n) 
+    {
+        unordered_set<int> iuset;
+        int sum = 0;
+        
+        while (true)
+        {
+            while (n)
+            {
+                int digit = n % 10;
+                sum = sum + digit * digit;
+                n /= 10;
+            }
+
+            auto pFind = iuset.find(sum);
+
+            if (pFind == iuset.end())  // doesn't exist in set
+            {
+                if (sum == 1)
+                    return true;
+                else
+                    iuset.insert(sum);
+            }
+            else  // already exists in set but is not 1
+                return false;
+
+            n = sum;
+            sum = 0;
+        }
+    }
+};
+
+
+
+int main()
+{
+    Solution solve;
+    bool r = solve.isHappy(2);
+    cout << r << endl;
+
+	return 0;
+}
+
+
+
+NOTES:
+
+将每次的sum结果存入一个unordered_set（基于hash寻找的时间复杂度是O(1)）
+存入之前须查看该结果是否已经在集合中了，如果没有则存入，如果有则返回false，因为再进行下去也会重复循环。
+如果发现sum为1，则返回true
