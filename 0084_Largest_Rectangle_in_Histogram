@@ -1,0 +1,82 @@
+#include<iostream>
+#include<vector>
+#include<stack>
+using namespace std;
+
+
+class Solution 
+{
+public:
+    int largestRectangleArea(vector<int>& heights) 
+    {
+        stack<int> stk;
+        stk.push(-1);
+        stk.push(0);
+        int tmpTop = 0;
+        int maxArea = heights[0];
+        
+        for (int idx = 1; idx != heights.size(); ++idx)
+        {   
+            while (heights[idx] < heights[stk.top()])
+            {
+                tmpTop = stk.top();
+                stk.pop();
+                
+                if (stk.top() == -1)
+                    break;
+
+                // here: heights[stk.top()] <= heights[tmpTop]
+                while (heights[stk.top()] == heights[tmpTop])
+                {
+                    stk.pop();
+                    if (stk.top() == -1)
+                        break;
+                }
+                // here: heights[stk.top()] < heights[tmpTop]
+                int candiArea = heights[tmpTop] * (idx - stk.top() - 1);  // area corresponding to one index is determined
+                maxArea = maxArea > candiArea ? maxArea : candiArea;
+            }
+
+            stk.push(idx);
+            maxArea = maxArea > heights[idx] ? maxArea : heights[idx];
+        }
+
+        return maxArea;
+
+    }
+};
+
+
+int main()
+{
+    Solution solve;
+    vector<int> heights = { 2, 1, 5, 6, 2, 3, 2, 1 };
+    //vector<int> heights = { 2, 5 };
+    auto area = solve.largestRectangleArea(heights);
+    cout << area << endl;
+
+    return 0;
+}
+
+
+
+
+
+NOTES:
+
+每个索引对应的bin都可以确定一个最大的面积：将此bin两边相邻的所有高度大于或等于该bin高度的bins都包含进来，计算总面积。
+也就是说，当我们从左向右依次读取各个bin的时候，必须考察后面bin的高度是不是大于当前读取到的bin的高度。
+假设当前bin的索引是i，欲确定这个bin_i对应的最大面积，必须一直读下去，直到某个bin_j的高度小于bin_(j-1)，我们才能把bin_i对应的最大面积找到。
+这种FILO的输入输出顺序可以用stack来存储。
+
+创建一个stack，从左向右依次读取每个bin，将bin的索引存入stack中。
+
+I: 如果后面的bin_k的高度比前面的bin_(k-1)的高度大，则把k压入栈中(push)。
+II: 假如读到bin_j(j还没入栈)，发现它的高度小于bin_(j-1)，则弹出栈顶(pop)的j-1。
+    弹出j-1后，还需要考察j-1的高度是“等于”还是“大于”当前栈顶元素q (即未弹出j-1之前，j-1前面的那个元素，不一定是j-2，如果h(j-1)<h(j-2)，处理j-1的时候就把j-2弹出去了)：
+    1. 如果大于，则可以确定j-1这个bin对应的最大高度为h(j-1)x1，1是宽度，h是height；
+    2. 如果等于，不断把当前栈顶的元素弹出来，直到大于为止（也有可能把栈弹空）。此时j-1这个bin对应的最大面积是h(j-1)*(j-stack.top()-1)
+    3. 不可能小于。如果小于，到j-1的时候就需要执行pop了，不会等到j才弹出。
+
+如果使用暴力寻找，则从左向右一次将各个bin对应的最大面积给找出来，中间多了大量的重复计算。
+使用栈来寻找，可以避免很多重复计算，无非就是按照不同的顺序把各个bin对应的最大面积给找出来。取其中的最大值。
